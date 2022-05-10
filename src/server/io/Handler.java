@@ -16,23 +16,23 @@ import java.util.Deque;
  * @Description handle io requests from all sockets
  * @create 2022-05-09 23:57
  */
-public class handler extends Thread{
+public class Handler extends Thread{
     private Deque<Socket> socketQueue;
     private MyMonitor jobQueue;
     /**
-     * server.io.handler.handler():
+     * server.io.Handler.Handler():
      * constructor
      * @date 2022/5/10~10:20
      * @param socketQueue the socketQueue grabbed from Acceptor
      * @return
      */
-    public handler(Deque<Socket> socketQueue, MyMonitor jobQueue) {
+    public Handler(Deque<Socket> socketQueue, MyMonitor jobQueue) {
         this.socketQueue = socketQueue; // ATTENTION!!!!!NOT THREAD SAFE!!!
         this.jobQueue = jobQueue;
     }
 
     /**
-     * server.io.handler.doRead():
+     * server.io.Handler.doRead():
      *
      * @date 2022/5/10~11:22
      * @param
