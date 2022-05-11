@@ -1,4 +1,4 @@
-package client;
+package main.client;
 
 import server.io.Acceptor;
 import server.io.Handler;

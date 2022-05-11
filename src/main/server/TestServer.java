@@ -1,9 +1,9 @@
-package server;
+package main.server;
 
-import server.io.Acceptor;
-import server.io.Handler;
-import server.process.MyMonitor;
-import server.process.ThreadManager;
+import main.server.io.Acceptor;
+import main.server.io.Handler;
+import main.server.process.MyMonitor;
+import main.server.process.ThreadManager;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -34,10 +34,11 @@ public class TestServer {
             manager.start();
             Thread.sleep(10000L);
             // add some jobs
-            for (int i = 0; i < 1000000; i++) {
+            for (int i = 0; i < 100; i++) {
 //                jobQueue.enqueue(socket, "ADD,10,20");
 
                 jobQueue.enqueue(socket, "MUL,1009240294,2092034923");
+
 //                Thread.sleep(2000L);
 //                if (i == 3)
 //                    jobQueue.enqueue(socket, "KILL,0,0");

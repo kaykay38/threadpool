@@ -1,4 +1,4 @@
-package server.io;
+package main.server.io;
 
 import java.io.IOException;
 import java.net.ServerSocket;

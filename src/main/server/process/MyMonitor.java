@@ -1,4 +1,4 @@
-package server.process;
+package main.server.process;
 
 
 import java.net.Socket;
@@ -54,8 +54,6 @@ public class MyMonitor {// job queue
         q.addLast(job);
 
         notifyAll();
-
-
     }
 
     /**

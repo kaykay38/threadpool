@@ -1,7 +1,7 @@
-package server.process;
+package main.server.process;
 
-import utility.InstructionSet;
-import utility.MyUtility;
+import main.utility.InstructionSet;
+import main.utility.MyUtility;
 
 import java.io.IOException;
 import java.io.PrintWriter;

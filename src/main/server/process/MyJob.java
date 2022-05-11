@@ -1,4 +1,4 @@
-package server.process;
+package main.server.process;
 
 import java.net.Socket;
 
@@ -10,6 +10,7 @@ import java.net.Socket;
  */
 public class MyJob {
     private Socket clientSocket;
+
     private String instruction;
 
 
@@ -20,7 +21,6 @@ public class MyJob {
      * @date 2022/5/8~18:33
      * @param clientSocket from which client
      * @param instruction instructions to be performed
-     * @return
      */
     public MyJob(Socket clientSocket, String instruction) {
         this.clientSocket = clientSocket;
@@ -28,25 +28,41 @@ public class MyJob {
     }
 
     /**
+     * server.process.MyJob.getClientSocket():
+     * get the client info
+     * @date 2022/5/8~18:36
+     * @return java.lang.String
+     */
+    public Socket getClientSocket() {
+        return clientSocket;
+    }
+
+    /**
+     * server.process.MyJob.getInstruction():
+     * set the client info
+     * @param clientSocket - Socket
+     */
+    public void setClientSocket(Socket clientSocket) {
+        this.clientSocket = clientSocket;
+    }
+
+    /**
      * server.process.MyJob.getInstruction():
      * get the instruction
      * @date 2022/5/8~21:32
-     * @param
      * @return java.lang.String
      */
-
     public String getInstruction() {
         return instruction;
     }
 
     /**
      * server.process.MyJob.getClientSocket():
-     * get the client info
-     * @date 2022/5/8~18:36
-     * @param
-     * @return java.lang.String
+     * set the instruction
+     * @param instruction - String
      */
-    public Socket getClientSocket() {
-        return clientSocket;
+    public void setInstruction(String instruction) {
+        this.instruction = instruction;
     }
+
 }

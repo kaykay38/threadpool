@@ -1,9 +1,9 @@
-package server;
+package main.server;
 
-import server.io.Acceptor;
-import server.io.Handler;
-import server.process.MyMonitor;
-import server.process.ThreadManager;
+import main.server.io.Acceptor;
+import main.server.io.Handler;
+import main.server.process.MyMonitor;
+import main.server.process.ThreadManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;

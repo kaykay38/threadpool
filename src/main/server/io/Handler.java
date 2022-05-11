@@ -1,6 +1,6 @@
-package server.io;
+package main.server.io;
 
-import server.process.MyMonitor;
+import main.server.process.MyMonitor;
 
 import java.io.BufferedReader;
 import java.io.IOException;
