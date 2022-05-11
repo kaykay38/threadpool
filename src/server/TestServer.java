@@ -14,7 +14,7 @@ import java.util.Deque;
 /**
  * @author Tianyang Liao
  * @course CSCD 467
- * @Description
+ * @Description Currently just testing for MyThreadPool (not for acceptor and handler)
  * @create 2022-05-10 17:32
  */
 public class TestServer {
@@ -32,8 +32,23 @@ public class TestServer {
             Socket socket = listener.accept();
             testQueue.add(socket);
             manager.start();
-            handler.start();
+            Thread.sleep(5000L);
+            // add some jobs
+            for (int i = 0; i < 10000; i++) {
+//                jobQueue.enqueue(socket, "ADD,10,20");
 
+                jobQueue.enqueue(socket, "MUL,1009240294,2092034923");
+//                Thread.sleep(2000L);
+//                if (i == 3)
+//                    jobQueue.enqueue(socket, "KILL, 0, 0");
+
+            }
+
+
+            // handler.start();
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         } finally {
             listener.close();
         }

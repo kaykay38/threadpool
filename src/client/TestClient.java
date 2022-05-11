@@ -30,14 +30,17 @@ public class TestClient {
         System.out.println(1);
 
         // send instruction to server
-        String testInstruction = "ADD,2,3";
-        out.println(testInstruction);
+//        String testInstruction = "ADD,2,3";
+//        out.println(testInstruction);
         System.out.println(2);
 
         // get the response
         System.out.println(3);
-        String response = in.readLine();
-        System.out.println(response);
+        for (int i = 0; i < 10000; i++) {
+            String response = in.readLine();
+            System.out.println(response);
+
+        }
 
     }
 

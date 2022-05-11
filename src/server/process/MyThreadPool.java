@@ -60,14 +60,14 @@ public class MyThreadPool {
 
                 // dequeue will be blocked if there are no jobs to grab
                 MyJob job = jobQueue.dequeue(); // grab a job from queue
-
+                System.out.println(1111);
 
                 try {
                     // fetch a instruction
                     String[] res = MyUtility.parseInstruction(job.getInstruction());
 
                     // get the feedback by executing instruction
-                    double feedback = MyUtility.execute(Double.parseDouble(res[0]), Double.parseDouble(res[1]), InstructionSet.valueOf(res[2]));
+                    double feedback = MyUtility.execute(Double.parseDouble(res[1]), Double.parseDouble(res[2]), InstructionSet.valueOf(res[0]));
 
                     // create the output stream for sending back message
                     PrintWriter out = new PrintWriter(job.getClientSocket().getOutputStream(), true);
@@ -80,6 +80,7 @@ public class MyThreadPool {
                 } catch (RuntimeException e2) {// KILL
                     e2.printStackTrace();
                     stopped = true;
+                    finished = true;
                 } catch (IOException e3) {// failure to get output stream
                     e3.printStackTrace();
                 }

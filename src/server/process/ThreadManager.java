@@ -52,7 +52,7 @@ public class ThreadManager extends Thread {
 
         // stuck until stop signal arrives
         while (!pool.getStopSignal()) ;
-
+        System.out.println("Stop signal captured! Stop the pool!");
         pool.stopPool();
     }
 
