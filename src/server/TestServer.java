@@ -32,15 +32,15 @@ public class TestServer {
             Socket socket = listener.accept();
             testQueue.add(socket);
             manager.start();
-            Thread.sleep(5000L);
+            Thread.sleep(10000L);
             // add some jobs
-            for (int i = 0; i < 10000; i++) {
+            for (int i = 0; i < 1000000; i++) {
 //                jobQueue.enqueue(socket, "ADD,10,20");
 
                 jobQueue.enqueue(socket, "MUL,1009240294,2092034923");
 //                Thread.sleep(2000L);
 //                if (i == 3)
-//                    jobQueue.enqueue(socket, "KILL, 0, 0");
+//                    jobQueue.enqueue(socket, "KILL,0,0");
 
             }
 

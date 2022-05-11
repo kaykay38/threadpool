@@ -56,11 +56,12 @@ public class MyThreadPool {
 
         @Override
         public void run() {
+            System.out.println(Thread.currentThread().getName() + " is working...");
             while (!finished) {// wait for a stop signal
 
                 // dequeue will be blocked if there are no jobs to grab
                 MyJob job = jobQueue.dequeue(); // grab a job from queue
-                System.out.println(1111);
+
 
                 try {
                     // fetch a instruction
@@ -87,6 +88,8 @@ public class MyThreadPool {
 
 
             }
+
+            System.out.println(Thread.currentThread().getName() + " is terminated");
         }
 
     }

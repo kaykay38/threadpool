@@ -36,7 +36,7 @@ public class TestClient {
 
         // get the response
         System.out.println(3);
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 1000000; i++) {
             String response = in.readLine();
             System.out.println(response);
 
