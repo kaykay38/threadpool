@@ -1,5 +1,7 @@
 package server;
 
+import server.io.Acceptor;
+import server.io.Handler;
 import server.process.MyMonitor;
 import server.process.ThreadManager;
 
@@ -35,19 +37,38 @@ public class CapitalizeServer {
      */
     public static void main(String[] args) throws Exception {
         System.out.println("The capitalization server is running.");
-        int clientNumber = 0;
         ServerSocket listener = new ServerSocket(9898);
+        Acceptor acceptor = new Acceptor(listener);
         MyMonitor jobQueue = new MyMonitor(50);
         ThreadManager manager = new ThreadManager(jobQueue);
-        listener.accept();
+        Handler handler = new Handler(acceptor.getSocketQueue(), jobQueue);
+
         try {
-            while (true) {
-                // new Capitalizer(listener.accept(), clientNumber++).start();
-            }
+            acceptor.start();
+            manager.start();
+            handler.start();
+
         } finally {
             listener.close();
         }
     }
+
+
+/*    original main    */
+
+//    public static void main(String[] args) throws Exception {
+//        System.out.println("The capitalization server is running.");
+//        int clientNumber = 0;
+//        ServerSocket listener = new ServerSocket(9898);
+//
+//        try {
+//            while (true) {
+//                new Capitalizer(listener.accept(), clientNumber++).start();
+//            }
+//        } finally {
+//            listener.close();
+//        }
+//    }
 
     /**
      * A private thread to handle capitalization requests on a particular

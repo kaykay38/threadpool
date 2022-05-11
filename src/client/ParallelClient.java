@@ -58,6 +58,7 @@ public class ParallelClient {
                     out.println(".");
                 }
             } catch (IOException e) {
+                e.printStackTrace();
             }
 
 

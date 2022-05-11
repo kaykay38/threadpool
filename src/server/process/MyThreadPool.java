@@ -3,6 +3,9 @@ package server.process;
 import utility.InstructionSet;
 import utility.MyUtility;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+
 /**
  * @author Tianyang Liao
  * @course CSCD 467
@@ -60,14 +63,25 @@ public class MyThreadPool {
 
 
                 try {
-                    String[] res = MyUtility.parseInstruction(job.getInstruc()); // fetch a instruction
+                    // fetch a instruction
+                    String[] res = MyUtility.parseInstruction(job.getInstruction());
 
-                    MyUtility.execute(Double.parseDouble(res[0]), Double.parseDouble(res[1]), InstructionSet.valueOf(res[2]));
+                    // get the feedback by executing instruction
+                    double feedback = MyUtility.execute(Double.parseDouble(res[0]), Double.parseDouble(res[1]), InstructionSet.valueOf(res[2]));
+
+                    // create the output stream for sending back message
+                    PrintWriter out = new PrintWriter(job.getClientSocket().getOutputStream(), true);
+
+                    // send message back to client
+                    out.println(feedback);
 
                 } catch (IllegalArgumentException e1) { // illegal instructions
-                    //
+                    e1.printStackTrace();
                 } catch (RuntimeException e2) {// KILL
+                    e2.printStackTrace();
                     stopped = true;
+                } catch (IOException e3) {// failure to get output stream
+                    e3.printStackTrace();
                 }
 
 

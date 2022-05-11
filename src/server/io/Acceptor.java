@@ -13,9 +13,15 @@ import java.util.Deque;
  * @create 2022-05-09 23:52
  */
 public class Acceptor extends Thread{
-    private Deque<Socket> socketQueue;
+    private Deque<Socket> socketQueue; // sockets that are connecting to the server
     private ServerSocket listener;
-
+    /**
+     * server.io.Acceptor.Acceptor():
+     *
+     * @date 2022/5/10~15:55
+     * @param listener the server socket used to listen for incoming client connections
+     * @return
+     */
     public Acceptor(ServerSocket listener) {
         this.socketQueue = new ArrayDeque<Socket>();
         this.listener = listener;

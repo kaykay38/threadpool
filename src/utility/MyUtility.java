@@ -9,7 +9,7 @@ package utility;
 public class MyUtility {
 
     /**
-     * utility.MyUtility.parseInstruc():
+     * utility.MyUtility.parseInstruction():
      * utility function for splitting a String form instruction <br>
      * should handle all possible cases <br>
      * only allowed case: "operator,operand,operand" without space, or "KILL" <br>
@@ -25,7 +25,7 @@ public class MyUtility {
     public static String[] parseInstruction(String i) {
         String[] ret = i.split(",");
 
-        throw new IllegalArgumentException();
+        return ret;
 
 
 
@@ -33,7 +33,7 @@ public class MyUtility {
 
     /**
      * utility.MyUtility.execute():
-     * execute a instruction
+     * execute a instruction (need further implementation)
      * @date 2022/5/8~21:22
      * @param op1 first operand
      * @param op2 second operand

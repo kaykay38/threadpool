@@ -1,6 +1,7 @@
 package server.process;
 
 
+import java.net.Socket;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -30,20 +31,29 @@ public class MyMonitor {// job queue
 
     /**
      * server.process.MyMonitor.enqueue():
-     * This method enqueues a job to the job queue.
-     *
-     * @param clientInfo socket which issues this job
+     * This method enqueues a job to the job queue. <br>
+     * (NEED FURTHER IMPLEMENTATION TO MAKE IT THREAD SAFE)
+     * 
+     * @param clientSocket socket which issues this job
      * @param instruction input instruction in a string form
      * @return void
      * @date 2022/5/8~17:29
      */
-    public synchronized void enqueue(String clientInfo, String instruction) {
-
+    public synchronized void enqueue(Socket clientSocket, String instruction) {
+        while (q.size() >= capacity) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         // create a job
-        MyJob job = new MyJob(clientInfo, instruction);
+        MyJob job = new MyJob(clientSocket, instruction);
 
         // put the job into queue
         q.addLast(job);
+
+        notifyAll();
 
 
     }
@@ -51,14 +61,24 @@ public class MyMonitor {// job queue
     /**
      * server.process.MyMonitor.dequeue():
      * This method dequeues a job from the queue
+     * (NEED FURTHER IMPLEMENTATION TO MAKE IT THREAD SAFE)
      * @date 2022/5/8~18:52
      * @param
      * @return server.process.MyJob
      */
     public synchronized MyJob dequeue() {
+        while (q.isEmpty()) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         // remove a job from queue
         MyJob job = q.removeFirst();
+
+        notifyAll();
 
         return job;
     }
@@ -70,7 +90,7 @@ public class MyMonitor {// job queue
      * @param
      * @return int
      */
-    public int getQueueSize() {
+    public synchronized int getQueueSize() {
         return q.size();
     }
 

@@ -8,12 +8,13 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.channels.Channel;
 import java.util.Deque;
 
 /**
  * @author Tianyang Liao
  * @course CSCD 467
- * @Description handle io requests from all sockets
+ * @Description handle reading requests from all sockets
  * @create 2022-05-09 23:57
  */
 public class Handler extends Thread{
@@ -33,7 +34,8 @@ public class Handler extends Thread{
 
     /**
      * server.io.Handler.doRead():
-     *
+     * scan through input streams of all sockets in the socket queue <br>
+     * and enqueue all tasks into the job queue (only 1 time)
      * @date 2022/5/10~11:22
      * @param
      * @return void
@@ -46,29 +48,20 @@ public class Handler extends Thread{
                         new InputStreamReader(socket.getInputStream()));
                 String input = in.readLine();
                 if (input != null)
-                    jobQueue.enqueue(socket.toString(), input);
+                    jobQueue.enqueue(socket, input);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
-
-
         }
 
     }
 
-    public void doWrite() {
-        PrintWriter out;
-        for (Socket socket: socketQueue) {
-            try {
-                out = new PrintWriter(socket.getOutputStream(), true);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
+    @Override
+    public void run() {
+        while (true) {
+            doRead();
         }
     }
+
 
 }
