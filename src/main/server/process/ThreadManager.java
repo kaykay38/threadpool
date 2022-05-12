@@ -10,7 +10,7 @@ import java.util.TimerTask;
  * @create 2022-05-08 15:54
  */
 public class ThreadManager extends Thread {
-    private MyMonitor jobQueue;
+    private JobQueue jobQueue;
     private MyThreadPool pool;
 
     /**
@@ -20,7 +20,7 @@ public class ThreadManager extends Thread {
      * @param jobQueue job queue
      * @date 2022/5/8~23:01
      */
-    public ThreadManager(MyMonitor jobQueue) {
+    public ThreadManager(JobQueue jobQueue) {
         this.jobQueue = jobQueue;
         this.pool = new MyThreadPool(40, jobQueue);
     }
@@ -39,8 +39,9 @@ public class ThreadManager extends Thread {
             @Override
             public void run() {
                 // once pool stops, timer should be terminated
-                if (pool.getStopSignal())
+                if (pool.getStopSignal()) {
                     timer.cancel();
+                }
                 // poll the status of current job queue and thread pool and adjust # of threads in the pool
                 poll();
             }
@@ -51,9 +52,10 @@ public class ThreadManager extends Thread {
 
 
         // stuck until stop signal arrives
-        while (!pool.getStopSignal()) ;
+        while (!pool.getStopSignal());
         System.out.println("Stop signal captured! Stop the pool!");
         pool.stopPool();
+        System.exit(0);
     }
 
     /**
@@ -65,9 +67,9 @@ public class ThreadManager extends Thread {
      * @date 2022/5/10~9:52
      */
     public void poll() {
-        if (jobQueue.getQueueSize() <= 10) {
+        if (jobQueue.size() <= 10) {
             poolDecision(5);
-        } else if (jobQueue.getQueueSize() <= 20) {
+        } else if (jobQueue.size() <= 20) {
             poolDecision(10);
         } else {
             poolDecision(20);
@@ -86,12 +88,14 @@ public class ThreadManager extends Thread {
     public void poolDecision(int targetThreadNum) {
 
         // stop at the point "equal"
-        while (targetThreadNum < pool.numberThreadsRunning())
-            pool.decreaseThreadsInPool();
+        while (targetThreadNum < pool.getNumberThreadsRunning()) {
+            pool.decreaseThreads();
+        }
 
         // if it goes through the last while loop, it will skip this while loop
-        while (targetThreadNum > pool.numberThreadsRunning())
-            pool.increaseThreadsInPool();
+        while (targetThreadNum > pool.getNumberThreadsRunning()) {
+            pool.increaseThreads();
+        }
     }
 
 }

@@ -1,15 +1,10 @@
 package main.client;
 
-import main.server.io.Acceptor;
-import main.server.io.Handler;
-import main.server.process.MyMonitor;
-import main.server.process.ThreadManager;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 
 /**
  * @author Tianyang Liao
@@ -27,21 +22,29 @@ public class TestClient {
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(socket.getInputStream()));
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-        System.out.println(1);
+        System.out.println("The test client is running.");
 
         // send instruction to server
-//        String testInstruction = "ADD,2,3";
-//        out.println(testInstruction);
-        System.out.println(2);
-
-        // get the response
-        System.out.println(3);
-        for (int i = 0; i < 1000000; i++) {
-            String response = in.readLine();
-            System.out.println(response);
-
+//        System.out.println("Send instructions to server:");
+//        Scanner scanner = new Scanner(System.in);
+        String testInstruction;
+//        while (!socket.isInputShutdown() && (testInstruction = scanner.nextLine()) != null) {
+//            out.println(testInstruction);
+//            System.out.println("Server response: " + in.readLine());
+//        }
+        int i = 1;
+        testInstruction = "ADD,3,4";
+        System.out.println("Instruction: " + testInstruction);
+        while (!socket.isInputShutdown() && i <= 1000000) {
+//            System.out.println(i + " Instruction: " + testInstruction);
+            out.println(testInstruction);
+            if (i == 1000000) {
+                System.out.println("Response: " + in.readLine());
+                System.out.println(i + " instructions sent.");
+            }
+            i++;
         }
-
+        out.println("KILL");
     }
 
 

@@ -1,14 +1,11 @@
 package main.server.io;
 
-import main.server.process.MyMonitor;
+import main.server.process.JobQueue;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.channels.Channel;
 import java.util.Deque;
 
 /**
@@ -19,7 +16,10 @@ import java.util.Deque;
  */
 public class Handler extends Thread{
     private Deque<Socket> socketQueue;
-    private MyMonitor jobQueue;
+    private JobQueue jobQueue;
+    private BufferedReader in;
+    private String instruction;
+
     /**
      * server.io.Handler.Handler():
      * constructor
@@ -27,35 +27,36 @@ public class Handler extends Thread{
      * @param socketQueue the socketQueue grabbed from Acceptor
      * @return
      */
-    public Handler(Deque<Socket> socketQueue, MyMonitor jobQueue) {
+    public Handler(Deque<Socket> socketQueue, JobQueue jobQueue) {
         this.socketQueue = socketQueue; // ATTENTION!!!!!NOT THREAD SAFE!!!
         this.jobQueue = jobQueue;
     }
 
     /**
-     * server.io.Handler.doRead():
-     * scan through input streams of all sockets in the socket queue <br>
+     * server.io.Handler.doRead(): <br>
+     * Scan through input streams of all sockets in the socket queue <br>
      * and enqueue all tasks into the job queue (only 1 time)
      * @date 2022/5/10~11:22
      * @param
      * @return void
      */
     public void doRead() {
-        BufferedReader in = null;
+        this.in = null;
         for (Socket socket : socketQueue) {
             try {
                 in = new BufferedReader(
                         new InputStreamReader(socket.getInputStream()));
-                String input = in.readLine();
-                if (input != null)
-                    jobQueue.enqueue(socket, input);
+                instruction = in.readLine();
+                if (instruction != null) {
+                    jobQueue.enqueue(socket, instruction);
+                }
+                System.out.println("JobQueue size: " + jobQueue.size());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
     }
-
     @Override
     public void run() {
         while (true) {

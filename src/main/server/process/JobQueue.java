@@ -12,28 +12,26 @@ import java.util.Deque;
  * @Description The job queue for threads, Shared Object, Producer Consumer Model
  * @create 2022-05-08 15:55
  */
-public class MyMonitor {// job queue
+public class JobQueue {// job queue
 
     private int capacity;
     private Deque<MyJob> q; // job queue object
 
     /**
-     * server.process.MyMonitor.MyMonitor():
+     * server.process.JobQueue.JobQueue():
      * constructor
      * @date 2022/5/8~18:51
      * @param capacity max capacity for a job queue
      * @return
      */
-    public MyMonitor(int capacity) {
+    public JobQueue(int capacity) {
         this.capacity = capacity;
-        this.q = new ArrayDeque<MyJob>();
+        this.q = new ArrayDeque<>();
     }
 
     /**
-     * server.process.MyMonitor.enqueue():
+     * server.process.JobQueue.enqueue():
      * This method enqueues a job to the job queue. <br>
-     * (NEED FURTHER IMPLEMENTATION TO MAKE IT THREAD SAFE)
-     * 
      * @param clientSocket socket which issues this job
      * @param instruction input instruction in a string form
      * @return void
@@ -57,7 +55,7 @@ public class MyMonitor {// job queue
     }
 
     /**
-     * server.process.MyMonitor.dequeue():
+     * server.process.JobQueue.dequeue():
      * This method dequeues a job from the queue
      * (NEED FURTHER IMPLEMENTATION TO MAKE IT THREAD SAFE)
      * @date 2022/5/8~18:52
@@ -82,17 +80,13 @@ public class MyMonitor {// job queue
     }
 
     /**
-     * server.process.MyMonitor.getQueueSize():
+     * server.process.JobQueue.getQueueSize():
      * return the size of job queue
      * @date 2022/5/8~23:12
      * @param
      * @return int
      */
-    public synchronized int getQueueSize() {
+    public synchronized int size() {
         return q.size();
     }
-
-
-
-
 }

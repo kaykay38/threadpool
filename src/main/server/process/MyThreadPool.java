@@ -1,7 +1,6 @@
 package main.server.process;
 
 import main.utility.InstructionSet;
-import main.utility.MyUtility;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,8 +17,7 @@ public class MyThreadPool {
     private int actualNumberThreads;
     private WorkerThread holders[];    // stores the worker thread references
     private volatile boolean stopped;  // used to receive a stop signal from main thread
-    private MyMonitor jobQueue;
-    //and the main server thread
+    private JobQueue jobQueue; //and the main server thread
 
     /**
      * server.process.MyThreadPool.MyThreadPool():
@@ -29,7 +27,7 @@ public class MyThreadPool {
      * @param jobQueue    shared by all WorkerThread in the pool and ThreadManager
      * @date 2022/5/8~18:57
      */
-    public MyThreadPool(int maxCapacity, MyMonitor jobQueue) {
+    public MyThreadPool(int maxCapacity, JobQueue jobQueue) {
         this.maxCapacity = maxCapacity;
         this.actualNumberThreads = 0;
         this.holders = new WorkerThread[maxCapacity];
@@ -56,42 +54,41 @@ public class MyThreadPool {
 
         @Override
         public void run() {
-            System.out.println(Thread.currentThread().getName() + " is working...");
             while (!finished) {// wait for a stop signal
 
+                System.out.println(Thread.currentThread().getName() + " is working...");
                 // dequeue will be blocked if there are no jobs to grab
                 MyJob job = jobQueue.dequeue(); // grab a job from queue
 
-
                 try {
-                    // fetch a instruction
-                    String[] res = MyUtility.parseInstruction(job.getInstruction());
-
-                    // get the feedback by executing instruction
-                    double feedback = MyUtility.execute(Double.parseDouble(res[1]), Double.parseDouble(res[2]), InstructionSet.valueOf(res[0]));
-
                     // create the output stream for sending back message
                     PrintWriter out = new PrintWriter(job.getClientSocket().getOutputStream(), true);
+                    try {
+                        // get the result by executing instruction
+                        double result = InstructionSet.execute(job.getInstruction());
 
-                    // send message back to client
-                    out.println(feedback);
+                        // send message back to client
+                        out.println(result);
+                        System.out.println("Running threads: " + actualNumberThreads);
 
-                } catch (IllegalArgumentException e1) { // illegal instructions
-                    e1.printStackTrace();
-                } catch (RuntimeException e2) {// KILL
-                    e2.printStackTrace();
-                    stopped = true;
-                    finished = true;
-                } catch (IOException e3) {// failure to get output stream
-                    e3.printStackTrace();
+                    } catch (NumberFormatException e) {// failure to get output stream
+//                        e.printStackTrace();
+                        out.println("Invalid numbers");
+                    } catch (IllegalArgumentException e1) { // illegal instructions
+                        e1.printStackTrace();
+                        out.println(e1.getMessage());
+                    } catch (RuntimeException e2) {// KILL
+                        e2.printStackTrace();
+                        out.println(e2.getMessage());
+                        stopped = true;
+                        finished = true;
+                    }
+                } catch (IOException e) {// failure to get output stream
+                    e.printStackTrace();
                 }
-
-
             }
-
             System.out.println(Thread.currentThread().getName() + " is terminated");
         }
-
     }
 
     /**
@@ -118,7 +115,7 @@ public class MyThreadPool {
      * @param
      * @return void
      */
-    public void increaseThreadsInPool() {
+    public void increaseThreads() {
 
         for (int i = actualNumberThreads; i < 2 * actualNumberThreads; i++) {
             holders[i] = new WorkerThread();
@@ -138,7 +135,7 @@ public class MyThreadPool {
      * @param
      * @return void
      */
-    public void decreaseThreadsInPool() {
+    public void decreaseThreads() {
         for (int i = actualNumberThreads - 1; i >= actualNumberThreads / 2; i--) {
             holders[i].stopThread();
         }
@@ -165,7 +162,6 @@ public class MyThreadPool {
 
 		// clear # of threads
 		actualNumberThreads = 0;
-
     }
 
     /**
@@ -175,16 +171,27 @@ public class MyThreadPool {
      * @param
      * @return int
      */
-    public int numberThreadsRunning() {
+    public int getNumberThreadsRunning() {
         return actualNumberThreads;
     }
 
+    /**
+     * server.process.MyThreadPool.getStopSignal():
+     * get the stop signal
+     * @date 2022/5/11~21:42
+     * @return int
+     */
     public boolean getStopSignal() {
         return stopped;
     }
 
-
-    /*public maxCapacity() {
-
-    }*/
+    /**
+     * server.process.MyThreadPool.getMaxCapacity():
+     * get max capacity of the pool
+     * @date 2022/5/11~21:42
+     * @return int
+     */
+    public int getMaxCapacity() {
+        return maxCapacity;
+    }
 }

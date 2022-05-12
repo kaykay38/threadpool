@@ -23,13 +23,13 @@ public class Acceptor extends Thread{
      * @return
      */
     public Acceptor(ServerSocket listener) {
-        this.socketQueue = new ArrayDeque<Socket>();
+        this.socketQueue = new ArrayDeque<>();
         this.listener = listener;
     }
 
     /**
      * server.io.Acceptor.run():
-     * keep listening for all incoming connections and <br>
+     * Keep listening for all incoming connections and <br>
      * this thread will be blocked when there's no new connection coming in
      * @date 2022/5/10~10:19
      * @param

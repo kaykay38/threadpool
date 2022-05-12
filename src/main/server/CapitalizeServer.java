@@ -2,7 +2,7 @@ package main.server;
 
 import main.server.io.Acceptor;
 import main.server.io.Handler;
-import main.server.process.MyMonitor;
+import main.server.process.JobQueue;
 import main.server.process.ThreadManager;
 
 import java.io.BufferedReader;
@@ -39,7 +39,7 @@ public class CapitalizeServer {
         System.out.println("The capitalization server is running.");
         ServerSocket listener = new ServerSocket(9898);
         Acceptor acceptor = new Acceptor(listener);
-        MyMonitor jobQueue = new MyMonitor(50);
+        JobQueue jobQueue = new JobQueue(50);
         ThreadManager manager = new ThreadManager(jobQueue);
         Handler handler = new Handler(acceptor.getSocketQueue(), jobQueue);
 
