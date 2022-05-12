@@ -1,10 +1,11 @@
-package main.server.io;
+package server.io;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * @author Tianyang Liao
@@ -23,13 +24,13 @@ public class Acceptor extends Thread{
      * @return
      */
     public Acceptor(ServerSocket listener) {
-        this.socketQueue = new ArrayDeque<>();
+        this.socketQueue = new LinkedBlockingDeque<>();
         this.listener = listener;
     }
 
     /**
      * server.io.Acceptor.run():
-     * Keep listening for all incoming connections and <br>
+     * keep listening for all incoming connections and <br>
      * this thread will be blocked when there's no new connection coming in
      * @date 2022/5/10~10:19
      * @param
@@ -37,7 +38,7 @@ public class Acceptor extends Thread{
      */
     @Override
     public void run() {
-        while (Thread.currentThread().isInterrupted()) {
+        while (true) {
             Socket socket = null;
             try {
                 socket = listener.accept();
@@ -45,7 +46,14 @@ public class Acceptor extends Thread{
                 e.printStackTrace();
             }
 
+            System.out.println("acceptor" + socketQueue.size());
+
             socketQueue.add(socket);
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
