@@ -1,9 +1,8 @@
-package server.io;
+package main.server.io;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.concurrent.LinkedBlockingDeque;
 

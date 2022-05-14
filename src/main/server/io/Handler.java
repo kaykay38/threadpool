@@ -1,12 +1,10 @@
-package server.io;
+package main.server.io;
 
-import server.process.MyMonitor;
+import main.server.process.JobQueue;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
@@ -20,8 +18,7 @@ import java.util.Deque;
  */
 public class Handler extends Thread{
     private Deque<Socket> socketQueue;
-    private MyMonitor jobQueue;
-    private HandlerMonitor monitor;
+    private JobQueue jobQueue;
     /**
      * server.io.Handler.Handler():
      * constructor
@@ -29,10 +26,9 @@ public class Handler extends Thread{
      * @param socketQueue the socketQueue grabbed from Acceptor
      * @return
      */
-    public Handler(Deque<Socket> socketQueue, MyMonitor jobQueue, HandlerMonitor monitor) {
+    public Handler(Deque<Socket> socketQueue, JobQueue jobQueue) {
         this.socketQueue = socketQueue; // ATTENTION!!!!!NOT THREAD SAFE!!!
         this.jobQueue = jobQueue;
-        this.monitor = monitor;
     }
 
     /**
@@ -76,10 +72,4 @@ public class Handler extends Thread{
 
         }
     }
-
-    public void sendReader(BufferedReader reader) {
-        monitor.setReader(reader);
-    }
-
-
 }

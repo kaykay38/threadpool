@@ -10,7 +10,6 @@ import java.net.Socket;
  */
 public class MyJob {
     private Socket clientSocket;
-
     private String instruction;
 
 

@@ -1,4 +1,6 @@
-package client;
+package main.client;
+
+import main.client.ParallelClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,46 +17,44 @@ import java.util.Random;
  */
 public class TestClient2 {
     public static void main(String[] args) throws Exception {
-        Client1[] clients = new Client1[100];
+        Client1[] clients = new Client1[20];
         // Thread.sleep(5000L);
         for (int x = 0; x < clients.length; x++) {
 
-            clients[x] = new Client1();
+            clients[x] = new Client1(x);
             clients[x].start();
-
         }
         for (int x = 0; x < clients.length; x++) {
             clients[x].join();
             System.out.println("client" + x + " finished");
-
         }
-
         System.out.println("Parallel Tests are done!!");
 
 
     }
 
     public static class Client1 extends Thread {
+        private final int id;
         private BufferedReader in;
         private PrintWriter out;
         Socket socket;
         String[] commands = {"ADD,4,5", "MUL,6,8", "ADD,455,4355", "MUL,6346,8"};
 
+        public Client1(int id) {
+            this.id = id;
+        }
         public void run() {
             String response;
 
+            String cmd;
             try {
                 connectToServer();
 
-                // System.out.println(Thread.currentThread());
-                // String welcome = in.readLine();
+                for (int i = 0; i < 100; i++) {
 
-                // System.out.print(welcome + "\n");
-                // if (!welcome.equals("Server busy try again later.")) {
-                //System.out.println("Going to send " + messagesToSend + " messages");
-                for (int i = 0; i < 100000; i++) {
-
-                    out.println(commands[i % 4]);
+                    cmd = commands[i % 4];
+                    System.out.println("client" + id + ": cmd" + i + "| " + cmd);
+                    out.println(cmd);
 
                     try {
 
@@ -70,19 +70,10 @@ public class TestClient2 {
                     System.out.println(Thread.currentThread().getName());
                     System.out.println(response);
                     System.out.println();
-
-
-
                 }
-
-                // }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            return;
-
-
         }
 
         public void connectToServer() throws IOException {

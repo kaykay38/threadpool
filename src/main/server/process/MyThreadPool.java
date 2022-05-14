@@ -67,6 +67,8 @@ public class MyThreadPool {
                         // get the result by executing instruction
                         double result = InstructionSet.execute(job.getInstruction());
 
+                        Thread.sleep(100);
+
                         // send message back to client
                         out.println(result);
                         System.out.println("Running threads: " + actualNumberThreads);
@@ -82,6 +84,8 @@ public class MyThreadPool {
                         out.println(e2.getMessage());
                         stopped = true;
                         finished = true;
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
                     }
                 } catch (IOException e) {// failure to get output stream
                     e.printStackTrace();
@@ -162,6 +166,7 @@ public class MyThreadPool {
 
 		// clear # of threads
 		actualNumberThreads = 0;
+        System.out.println("All threads are terminated");
     }
 
     /**

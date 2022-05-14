@@ -1,10 +1,9 @@
-package server;
+package main.server;
 
-import server.io.Acceptor;
-import server.io.Handler;
-import server.io.HandlerMonitor;
-import server.process.MyMonitor;
-import server.process.ThreadManager;
+import main.server.process.JobQueue;
+import main.server.io.Acceptor;
+import main.server.io.Handler;
+import main.server.process.ThreadManager;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -23,11 +22,9 @@ public class TestServer2 {
         System.out.println("The test server is running.");
         ServerSocket listener = new ServerSocket(9898, 500);
         Acceptor acceptor = new Acceptor(listener);
-        MyMonitor jobQueue = new MyMonitor(50);
+        JobQueue jobQueue = new JobQueue(50);
         ThreadManager manager = new ThreadManager(jobQueue);
-        // Deque<Socket> testQueue = new ArrayDeque<Socket>();
-        HandlerMonitor monitor = new HandlerMonitor();
-        Handler handler = new Handler(acceptor.getSocketQueue(), jobQueue, monitor);
+        Handler handler = new Handler(acceptor.getSocketQueue(), jobQueue);
 
         try {
             // monitor.start();
