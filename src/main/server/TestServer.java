@@ -21,19 +21,19 @@ public class TestServer {
     public static void main(String[] args) throws IOException {
         System.out.println("The test server is running.");
         ServerSocket listener = new ServerSocket(9898);
-        Acceptor acceptor = new Acceptor(listener);
+        // Acceptor acceptor = new Acceptor(listener);
         JobQueue jobQueue = new JobQueue(50);
         ThreadManager manager = new ThreadManager(jobQueue);
         Deque<Socket> socketQueue = new ArrayDeque<>();
-        Handler handler = new Handler(socketQueue, jobQueue);
+        // Handler handler = new Handler(socketQueue, jobQueue);
 
         try {
             Socket socket = listener.accept();
-            acceptor.start();
+            // acceptor.start();
             socketQueue.add(socket);
             manager.start();
-            Thread.sleep(10000L);
-            handler.start();
+            Thread.sleep(1000L);
+            // handler.start();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {

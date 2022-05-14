@@ -91,16 +91,17 @@ public class CapitalizeClient {
                 new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
 
-        // Consume the initial welcoming messages from the server
-        for (int i = 0; i < 3; i++) {
-            messageArea.append(in.readLine() + "\n");
-        }
+//        // Consume the initial welcoming messages from the server
+//        for (int i = 0; i < 3; i++) {
+//            messageArea.append(in.readLine() + "\n");
+//        }
     }
 
     /**
      * Runs the client application.
      */
     public static void main(String[] args) throws Exception {
+
         CapitalizeClient client = new CapitalizeClient();
         client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         client.frame.pack();

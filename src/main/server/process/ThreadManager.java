@@ -12,6 +12,9 @@ import java.util.TimerTask;
 public class ThreadManager extends Thread {
     private JobQueue jobQueue;
     private MyThreadPool pool;
+    private int threshold1; // first threshold
+    private int threshold2; // second threshold
+    private int pollInterval; // every pollInterval seconds, poll the status of thread pool
 
     /**
      * server.process.ThreadManager.ThreadManager():
@@ -23,7 +26,19 @@ public class ThreadManager extends Thread {
     public ThreadManager(JobQueue jobQueue) {
         this.jobQueue = jobQueue;
         this.pool = new MyThreadPool(40, jobQueue);
+        this.threshold1 = 10;
+        this.threshold2 = 20;
+        this.pollInterval = 2;
     }
+
+    public ThreadManager(JobQueue jobQueue, int threshold1, int threshold2, int pollInterval) {
+        this.jobQueue = jobQueue;
+        this.pool = new MyThreadPool(40, jobQueue);
+        this.threshold1 = threshold1;
+        this.threshold2 = threshold2;
+        this.pollInterval = pollInterval;
+    }
+
 
 
     @Override
@@ -44,11 +59,12 @@ public class ThreadManager extends Thread {
                 }
                 // poll the status of current job queue and thread pool and adjust # of threads in the pool
                 poll();
+                System.out.println("Running threads: " + pool.getNumberThreadsRunning());
             }
         };
 
         // perform a timer task
-        timer.schedule(task, 100, 2000);
+        timer.schedule(task, 100, pollInterval * 1000);
 
 
         // stuck until stop signal arrives
@@ -67,9 +83,9 @@ public class ThreadManager extends Thread {
      * @date 2022/5/10~9:52
      */
     public void poll() {
-        if (jobQueue.size() <= 10) {
+        if (jobQueue.size() <= threshold1) {
             poolDecision(5);
-        } else if (jobQueue.size() <= 20) {
+        } else if (jobQueue.size() <= threshold2) {
             poolDecision(10);
         } else {
             poolDecision(20);

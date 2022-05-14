@@ -1,13 +1,15 @@
 package main.client;
 
-import main.client.ParallelClient;
+
+
+import main.server.process.JobQueue;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Random;
+
 
 /**
  * @author Tianyang Liao
@@ -17,7 +19,7 @@ import java.util.Random;
  */
 public class TestClient2 {
     public static void main(String[] args) throws Exception {
-        Client1[] clients = new Client1[20];
+        Client1[] clients = new Client1[50];
         // Thread.sleep(5000L);
         for (int x = 0; x < clients.length; x++) {
 
@@ -50,7 +52,7 @@ public class TestClient2 {
             try {
                 connectToServer();
 
-                for (int i = 0; i < 100; i++) {
+                for (int i = 0; i < 4; i++) {
 
                     cmd = commands[i % 4];
                     System.out.println("client" + id + ": cmd" + i + "| " + cmd);
@@ -59,6 +61,7 @@ public class TestClient2 {
                     try {
 
                         response = in.readLine();
+
                         if (response == null || response.equals("")) {
                             System.out.println("client to terminate.");
                         }
@@ -67,9 +70,7 @@ public class TestClient2 {
                         response = "Error: " + ex;
                         System.out.println("" + response + "\n");
                     }
-                    System.out.println(Thread.currentThread().getName());
-                    System.out.println(response);
-                    System.out.println();
+                    System.out.println("Hello client " + id + ", here is result: " + response);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

@@ -21,8 +21,8 @@ public class TestServer2 {
     public static void main(String[] args) throws IOException {
         System.out.println("The test server is running.");
         ServerSocket listener = new ServerSocket(9898, 500);
-        Acceptor acceptor = new Acceptor(listener);
         JobQueue jobQueue = new JobQueue(50);
+        Acceptor acceptor = new Acceptor(listener, jobQueue);
         ThreadManager manager = new ThreadManager(jobQueue);
         Handler handler = new Handler(acceptor.getSocketQueue(), jobQueue);
 

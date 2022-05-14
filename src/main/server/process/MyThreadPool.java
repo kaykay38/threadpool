@@ -1,5 +1,6 @@
 package main.server.process;
 
+import jdk.swing.interop.SwingInterOpUtils;
 import main.utility.InstructionSet;
 
 import java.io.IOException;
@@ -54,9 +55,9 @@ public class MyThreadPool {
 
         @Override
         public void run() {
+            System.out.println(Thread.currentThread().getName() + " is working...");
             while (!finished) {// wait for a stop signal
 
-                System.out.println(Thread.currentThread().getName() + " is working...");
                 // dequeue will be blocked if there are no jobs to grab
                 MyJob job = jobQueue.dequeue(); // grab a job from queue
 
@@ -67,11 +68,11 @@ public class MyThreadPool {
                         // get the result by executing instruction
                         double result = InstructionSet.execute(job.getInstruction());
 
-                        Thread.sleep(100);
+                        Thread.sleep(200L);
 
                         // send message back to client
                         out.println(result);
-                        System.out.println("Running threads: " + actualNumberThreads);
+                        // System.out.println("Running threads: " + actualNumberThreads);
 
                     } catch (NumberFormatException e) {// failure to get output stream
 //                        e.printStackTrace();
@@ -80,7 +81,7 @@ public class MyThreadPool {
                         e1.printStackTrace();
                         out.println(e1.getMessage());
                     } catch (RuntimeException e2) {// KILL
-                        e2.printStackTrace();
+                        // e2.printStackTrace();
                         out.println(e2.getMessage());
                         stopped = true;
                         finished = true;

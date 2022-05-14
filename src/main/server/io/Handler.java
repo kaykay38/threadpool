@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.SocketException;
 
-import java.util.Deque;
+
 
 /**
  * @author Tianyang Liao
@@ -17,7 +17,7 @@ import java.util.Deque;
  * @create 2022-05-09 23:57
  */
 public class Handler extends Thread{
-    private Deque<Socket> socketQueue;
+    private SocketQueue socketQueue;
     private JobQueue jobQueue;
     /**
      * server.io.Handler.Handler():
@@ -26,7 +26,7 @@ public class Handler extends Thread{
      * @param socketQueue the socketQueue grabbed from Acceptor
      * @return
      */
-    public Handler(Deque<Socket> socketQueue, JobQueue jobQueue) {
+    public Handler(SocketQueue socketQueue, JobQueue jobQueue) {
         this.socketQueue = socketQueue; // ATTENTION!!!!!NOT THREAD SAFE!!!
         this.jobQueue = jobQueue;
     }
@@ -42,27 +42,28 @@ public class Handler extends Thread{
     public void doRead() {
         BufferedReader in = null;
         String input = null;
-        for (Socket socket : socketQueue) {
-            try {
-                in = new BufferedReader(
-                        new InputStreamReader(socket.getInputStream()));
+        synchronized (socketQueue) {
+            for (Socket socket : socketQueue) {
+                try {
+                    in = new BufferedReader(
+                            new InputStreamReader(socket.getInputStream()));
 
-                if (in.ready())
-                    input = in.readLine();
-                if (input != null) {
-                    jobQueue.enqueue(socket, input);
-                    System.out.println(input);
-                    // System.out.println("handler reading!!");
+                    if (in.ready())
+                        input = in.readLine();
+                    if (input != null) {
+                        jobQueue.enqueue(socket, input);
+                        // System.out.println(input);
+                        // System.out.println("handler reading!!");
+                    }
+
+                } catch (SocketException e) {
+                    socketQueue.dequeue(socket);
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
-            } catch (SocketException e) {
-                socketQueue.remove(socket);
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
-
     }
 
     @Override

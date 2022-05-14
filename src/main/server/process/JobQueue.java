@@ -89,4 +89,8 @@ public class JobQueue {// job queue
     public synchronized int size() {
         return q.size();
     }
+
+    public int getCapacity() {
+        return capacity;
+    }
 }
