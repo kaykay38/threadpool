@@ -20,6 +20,11 @@ import javax.swing.JTextField;
  */
 public class MathClientGUI {
     public static void main(String[] args) throws Exception {
+        if (args.length != 1) {
+            System.out.println("Usage: java main.client.MathClientGUI <client name/ID>");
+            System.out.println("Example: java main.client.MathClientGUI client1");
+            System.exit(1);
+        }
         GUIClient client = new GUIClient(args[0]);
         client.start();
         client.join();
@@ -89,28 +94,6 @@ public class MathClientGUI {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-        }
-
-        public void sendInstructionReceiveResponse(String instruction) {
-            System.out.println(instruction);
-            messageArea.append(instruction + "\n");
-            out.println(instruction);
-            String response = "";
-            try {
-                response = in.readLine();
-                if (response == null || response.equals("")) {
-                    messageArea.append("client to terminate.\n");
-                    System.out.println("client to terminate.");
-                }
-            } catch (IOException ex) {
-                response = "Error: " + ex;
-                messageArea.append(response + "\n");
-                System.out.println(response);
-            }
-            System.out.println(Thread.currentThread().getName());
-            messageArea.append(response + "\n");
-            System.out.println(response);
-            System.out.println();
         }
 
         public void connectToServer() throws IOException {

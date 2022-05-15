@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class TimeUtil {
 
-    public static String getTimeStamp() {
+    public static String getCurrentTime() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss.SSSSS yyyy/MM/dd");
         LocalDateTime now = LocalDateTime.now();
         return dtf.format(now);

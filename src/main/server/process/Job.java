@@ -28,7 +28,7 @@ public class Job {
         this.instruction = instruction;
         this.instructionId = instructionId;
         this.clientId = clientId;
-        this.timeStamp = TimeUtil.getTimeStamp();
+        this.timeStamp = TimeUtil.getCurrentTime();
     }
 
     /**

@@ -41,7 +41,12 @@ public class ThreadPool {
     // each Worker will grab a job in the jobQueue for
     // processing if there are available jobs in the jobQueue.
     private class WorkerThread extends Thread {
+        private int id;
         private volatile boolean finished = false;
+
+        public WorkerThread(int id) {
+            this.id = id;
+        }
 
         /**
          * server.process.MyThreadPool.WorkerThread.stopThread():
@@ -68,6 +73,8 @@ public class ThreadPool {
                         // get the result by executing instruction
                         double result = Instruction.execute(job.getInstruction());
 
+                        log("WorkerThread-" + id + ": processed " + job.getInstructionId() + " '" + job.getInstruction() + "' from " + job.getClientId() + " at " + TimeUtil.getCurrentTime());
+
                         // sleep for a while to simulate the processing time
                         // to allow jobQueue to be filled up
                         Thread.sleep(200L);
@@ -92,7 +99,7 @@ public class ThreadPool {
                     e.printStackTrace();
                 }
             }
-            log(Thread.currentThread().getName() + " terminated at " + TimeUtil.getTimeStamp());
+            log("WorkerThread-" + id + ": terminated at " + TimeUtil.getCurrentTime());
         }
     }
 
@@ -107,10 +114,10 @@ public class ThreadPool {
         // begin with 5 threads
         numberThreadsRunning = 5;
         for (int i = 0; i < numberThreadsRunning; i++) {
-            workerThreads[i] = new WorkerThread();
+            workerThreads[i] = new WorkerThread(i);
             workerThreads[i].start();
         }
-        log("Thread pool started with " + numberThreadsRunning + " threads at " + TimeUtil.getTimeStamp());
+        log("ThreadPool: started with " + numberThreadsRunning + " threads at " + TimeUtil.getCurrentTime());
     }
 
     /**
@@ -122,14 +129,14 @@ public class ThreadPool {
      */
     public void increaseThreads() {
         for (int i = numberThreadsRunning; i < 2 * numberThreadsRunning; i++) {
-            workerThreads[i] = new WorkerThread();
+            workerThreads[i] = new WorkerThread(i);
             workerThreads[i].start();
         }
 
         // update current thread #
         prevNumberThreadsRunning = numberThreadsRunning;
         numberThreadsRunning *= 2;
-        log("Threads doubled from " + prevNumberThreadsRunning + " to " + numberThreadsRunning + " threads at " + TimeUtil.getTimeStamp());
+        log("ThreadPool: Threads doubled from " + prevNumberThreadsRunning + " to " + numberThreadsRunning + " threads at " + TimeUtil.getCurrentTime());
     }
 
     /**
@@ -147,7 +154,7 @@ public class ThreadPool {
         // update current thread #
         prevNumberThreadsRunning = numberThreadsRunning;
         numberThreadsRunning /= 2;
-        log("Threads decreased from " + prevNumberThreadsRunning + " to " + numberThreadsRunning + " threads at " + TimeUtil.getTimeStamp());
+        log("ThreadPool: Threads decreased from " + prevNumberThreadsRunning + " to " + numberThreadsRunning + " threads at " + TimeUtil.getCurrentTime());
     }
 
     /**
@@ -167,7 +174,7 @@ public class ThreadPool {
 
 		// clear # of threads
 		numberThreadsRunning = 0;
-        log("All threads terminated at " + TimeUtil.getTimeStamp());
+        log("ThreadPool: All threads terminated at " + TimeUtil.getCurrentTime());
     }
 
     /**
