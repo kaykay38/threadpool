@@ -1,13 +1,11 @@
-package main.utility;
-
+package main.server.util;
 /**
- * @author Tianyang Liao
+ * @author Tianyang Liao, Mia Hunt, Samuel Urcino-Martinez
  * @course CSCD 467
  * @Description instruction set (need further implementation)
  * @create 2022-05-08 17:50
  */
-public enum InstructionSet {
-    KILL, ADD, SUB, MUL, DIV;
+public class Instruction {
 
     /**
      * Execute an instruction given as a String, <br>
@@ -22,33 +20,37 @@ public enum InstructionSet {
      */
     public static double execute(String instruction) {
         String[] instructionArr = instruction.split(",");
-        InstructionSet operator;
+        String operator;
         double num1, num2;
-        operator = InstructionSet.valueOf(instructionArr[0].toUpperCase());
         if (instructionArr.length >= 3) {
-            num1 = Double.parseDouble(instructionArr[1]);
-            num2 = Double.parseDouble(instructionArr[2]);
+            operator = instructionArr[0].toUpperCase();
+            try {
+                num1 = Double.parseDouble(instructionArr[1]);
+                num2 = Double.parseDouble(instructionArr[2]);
+            } catch(NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid instruction: not a number");
+            }
             switch (operator) {
-                case ADD:
+                case "ADD":
                     return num1 + num2;
-                case SUB:
+                case "SUB":
                     return num1 - num2;
-                case MUL:
+                case "MUL":
                     return num1 * num2;
-                case DIV:
+                case "DIV":
                     if (num2 == 0) {
-                        throw new IllegalArgumentException("Illegal instruction: (cannot divide by zero)");
+                        throw new IllegalArgumentException("Invalid instruction: (cannot divide by zero)");
                     }
                     return num1 / num2;
                 default:
-                    throw new IllegalArgumentException("Illegal instruction: " + instruction);
+                    throw new IllegalArgumentException("Invalid instruction");
             }
         }
         else if ("KILL".equalsIgnoreCase(instruction)) {
             throw new RuntimeException("KILL instruction received");
         }
         else {
-            throw new IllegalArgumentException("Illegal instruction: " + instruction);
+            throw new IllegalArgumentException("Invalid instruction");
         }
     }
 }

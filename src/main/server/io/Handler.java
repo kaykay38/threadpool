@@ -1,17 +1,16 @@
 package main.server.io;
 
-import main.server.process.JobQueue;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.SocketException;
 
-
+import main.server.util.JobQueue;
+import main.server.util.SocketQueue;
 
 /**
- * @author Tianyang Liao
+ * @author Tianyang Liao, Mia Hunt, Samuel Urcino-Martinez
  * @course CSCD 467
  * @Description handle reading requests from all sockets
  * @create 2022-05-09 23:57
@@ -19,6 +18,7 @@ import java.net.SocketException;
 public class Handler extends Thread{
     private SocketQueue socketQueue;
     private JobQueue jobQueue;
+
     /**
      * server.io.Handler.Handler():
      * constructor
@@ -40,37 +40,37 @@ public class Handler extends Thread{
      * @return void
      */
     public void doRead() {
-        BufferedReader in = null;
+        BufferedReader in;
         String input = null;
-        synchronized (socketQueue) {
-            for (Socket socket : socketQueue) {
-                try {
-                    in = new BufferedReader(
-                            new InputStreamReader(socket.getInputStream()));
+        String[] inputArr;
+        for (Socket socket: socketQueue) {
+            try {
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-                    if (in.ready())
-                        input = in.readLine();
-                    if (input != null) {
-                        jobQueue.enqueue(socket, input);
-                        // System.out.println(input);
-                        // System.out.println("handler reading!!");
+                if (in.ready())
+                    input = in.readLine();
+                if (input != null) {
+                    inputArr = input.split("\\s*\\|\\s*");
+                    if(inputArr.length == 3) {
+                        jobQueue.enqueue(socket, inputArr[2], inputArr[1], inputArr[0]);
+                    } else {
+                        jobQueue.enqueue(socket, input, "", "");
                     }
-
-                } catch (SocketException e) {
-                    socketQueue.dequeue(socket);
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
+            } catch (SocketException e) {
+                socketQueue.dequeue();
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
+
     }
 
     @Override
     public void run() {
         while (true) {
             doRead();
-
         }
     }
 }

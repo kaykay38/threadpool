@@ -1,31 +1,32 @@
 package main.server.process;
-
 import java.util.Timer;
 import java.util.TimerTask;
 
+import main.server.util.JobQueue;
+
 /**
- * @author Tianyang Liao
+ * @author Tianyang Liao, Mia Hunt, Samuel Urcino-Martinez
+ * @author Mia Hunt, Tianyang Liao
  * @course CSCD 467
  * @Description
  * @create 2022-05-08 15:54
  */
 public class ThreadManager extends Thread {
     private JobQueue jobQueue;
-    private MyThreadPool pool;
+    private ThreadPool pool;
     private int threshold1; // first threshold
     private int threshold2; // second threshold
-    private int pollInterval; // every pollInterval seconds, poll the status of thread pool
+    private int pollInterval; // every pollInterval * 10 milliseconds, poll the status of thread pool
 
     /**
      * server.process.ThreadManager.ThreadManager():
      * constructor
-     *
      * @param jobQueue job queue
      * @date 2022/5/8~23:01
      */
     public ThreadManager(JobQueue jobQueue) {
         this.jobQueue = jobQueue;
-        this.pool = new MyThreadPool(40, jobQueue);
+        this.pool = new ThreadPool(40, jobQueue);
         this.threshold1 = 10;
         this.threshold2 = 20;
         this.pollInterval = 2;
@@ -33,12 +34,11 @@ public class ThreadManager extends Thread {
 
     public ThreadManager(JobQueue jobQueue, int threshold1, int threshold2, int pollInterval) {
         this.jobQueue = jobQueue;
-        this.pool = new MyThreadPool(40, jobQueue);
+        this.pool = new ThreadPool(40, jobQueue);
         this.threshold1 = threshold1;
         this.threshold2 = threshold2;
         this.pollInterval = pollInterval;
     }
-
 
 
     @Override
@@ -54,24 +54,26 @@ public class ThreadManager extends Thread {
             @Override
             public void run() {
                 // once pool stops, timer should be terminated
-                if (pool.getStopSignal()) {
+                if (pool.isStopped()) {
                     timer.cancel();
                 }
                 // poll the status of current job queue and thread pool and adjust # of threads in the pool
                 poll();
-                System.out.println("Running threads: " + pool.getNumberThreadsRunning());
+                try {
+                    Thread.sleep(pollInterval * 10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         };
 
         // perform a timer task
-        timer.schedule(task, 100, pollInterval * 1000);
-
+        timer.schedule(task, 100, 2000);
 
         // stuck until stop signal arrives
-        while (!pool.getStopSignal());
-        System.out.println("Stop signal captured! Stop the pool!");
+        while (!pool.isStopped());
         pool.stopPool();
-        System.exit(0);
+        // System.exit(0);
     }
 
     /**
@@ -95,12 +97,10 @@ public class ThreadManager extends Thread {
     /**
      * server.process.ThreadManager.poolDecision():
      * increase or decrease thread pool
-     *
      * @param targetThreadNum
      * @return void
      * @date 2022/5/10~9:54
      */
-
     public void poolDecision(int targetThreadNum) {
 
         // stop at the point "equal"
@@ -113,5 +113,4 @@ public class ThreadManager extends Thread {
             pool.increaseThreads();
         }
     }
-
 }
