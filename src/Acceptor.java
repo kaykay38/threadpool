@@ -1,11 +1,7 @@
-package main.server.io;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-import main.server.util.JobQueue;
-import main.server.util.SocketQueue;
 
 /**
  * @author Tianyang Liao, Mia Hunt, Samuel Urcino-Martinez

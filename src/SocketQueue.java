@@ -1,4 +1,3 @@
-package main.server.util;
 import java.net.Socket;
 import java.util.ArrayDeque;
 import java.util.Deque;

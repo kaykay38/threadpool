@@ -1,4 +1,3 @@
-package main.server.util;
 /**
  * @author Tianyang Liao, Mia Hunt, Samuel Urcino-Martinez
  * @course CSCD 467

@@ -1,4 +1,3 @@
-package main.server.util;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -7,7 +6,7 @@ import java.time.format.DateTimeFormatter;
  * @course CSCD 467
  * @date 2022/5/14
  */
-public class TimeUtil {
+public class Utils {
 
     public static String getTimeStamp() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss.SSSSS yyyy/MM/dd");

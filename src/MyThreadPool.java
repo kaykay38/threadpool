@@ -1,11 +1,6 @@
-package main.server.process;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
-import main.server.util.Instruction;
-import main.server.util.JobQueue;
-import main.server.util.TimeUtil;
 
 /**
  * @author Tianyang Liao, Mia Hunt, Samuel Urcino-Martinez
@@ -13,7 +8,7 @@ import main.server.util.TimeUtil;
  * @Description
  * @create 2022-05-08 15:33
  */
-public class ThreadPool {
+public class MyThreadPool {
 
     private int maxCapacity;
     private int numberThreadsRunning;
@@ -30,7 +25,7 @@ public class ThreadPool {
      * @param jobQueue    shared by all WorkerThread in the pool and ThreadManager
      * @date 2022/5/8~18:57
      */
-    public ThreadPool(int maxCapacity, JobQueue jobQueue) {
+    public MyThreadPool(int maxCapacity, JobQueue jobQueue) {
         this.maxCapacity = maxCapacity;
         this.numberThreadsRunning = 0;
         this.workerThreads = new WorkerThread[maxCapacity];
@@ -59,7 +54,7 @@ public class ThreadPool {
         public void run() {
             while (!finished) {// wait for a stop signal
                 // dequeue will be blocked if there are no jobs to grab
-                Job job = jobQueue.dequeue(); // grab a job from queue
+                MyJob job = jobQueue.dequeue(); // grab a job from queue
 
                 try {
                     // create the output stream for sending back message
@@ -92,7 +87,7 @@ public class ThreadPool {
                     e.printStackTrace();
                 }
             }
-            log(Thread.currentThread().getName() + " terminated at " + TimeUtil.getTimeStamp());
+            log(Thread.currentThread().getName() + " terminated at " + Utils.getTimeStamp());
         }
     }
 
@@ -110,7 +105,7 @@ public class ThreadPool {
             workerThreads[i] = new WorkerThread();
             workerThreads[i].start();
         }
-        log("Thread pool started with " + numberThreadsRunning + " threads at " + TimeUtil.getTimeStamp());
+        log("Thread pool started with " + numberThreadsRunning + " threads at " + Utils.getTimeStamp());
     }
 
     /**
@@ -129,7 +124,7 @@ public class ThreadPool {
         // update current thread #
         prevNumberThreadsRunning = numberThreadsRunning;
         numberThreadsRunning *= 2;
-        log("Threads doubled from " + prevNumberThreadsRunning + " to " + numberThreadsRunning + " threads at " + TimeUtil.getTimeStamp());
+        log("Threads doubled from " + prevNumberThreadsRunning + " to " + numberThreadsRunning + " threads at " + Utils.getTimeStamp());
     }
 
     /**
@@ -147,7 +142,7 @@ public class ThreadPool {
         // update current thread #
         prevNumberThreadsRunning = numberThreadsRunning;
         numberThreadsRunning /= 2;
-        log("Threads decreased from " + prevNumberThreadsRunning + " to " + numberThreadsRunning + " threads at " + TimeUtil.getTimeStamp());
+        log("Threads decreased from " + prevNumberThreadsRunning + " to " + numberThreadsRunning + " threads at " + Utils.getTimeStamp());
     }
 
     /**
@@ -167,7 +162,7 @@ public class ThreadPool {
 
 		// clear # of threads
 		numberThreadsRunning = 0;
-        log("All threads terminated at " + TimeUtil.getTimeStamp());
+        log("All threads terminated at " + Utils.getTimeStamp());
     }
 
     /**
