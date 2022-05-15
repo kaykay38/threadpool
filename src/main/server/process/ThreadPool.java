@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 
 import main.server.util.Instruction;
 import main.server.util.JobQueue;
-import main.server.util.TimeUtil;
+import main.server.util.LogUtil;
 
 /**
  * @author Tianyang Liao, Mia Hunt, Samuel Urcino-Martinez
@@ -73,7 +73,7 @@ public class ThreadPool {
                         // get the result by executing instruction
                         double result = Instruction.execute(job.getInstruction());
 
-                        log("WorkerThread-" + id + ": processed " + job.getInstructionId() + " '" + job.getInstruction() + "' from " + job.getClientId() + " at " + TimeUtil.getCurrentTime());
+                        LogUtil.log("WorkerThread-" + id + ": processed " + job.getInstructionId() + " '" + job.getInstruction() + "' from " + job.getClientId());
 
                         // sleep for a while to simulate the processing time
                         // to allow jobQueue to be filled up
@@ -81,16 +81,17 @@ public class ThreadPool {
 
                         // send message back to client
                         out.println(result);
-                        // log("Running threads: " + numberThreadsRunning);
+                        // LogUtil.log("Running threads: " + numberThreadsRunning);
 
                     } catch (IllegalArgumentException e) { // INVALID
+                        LogUtil.log("Execute " + job.getInstruction() + ": " + e.getMessage());
                         out.println(e.getMessage());
                     } catch (InterruptedException e) { // if the thread is interrupted
                         e.printStackTrace();
                         out.println("Thread interrupted");
                     } catch (RuntimeException e) { // KILL
-                        log("KILL instruction received at " + job.getTimeStamp());
-                        out.println(e.getMessage() + "\n" + "Server is shutting down");
+                        LogUtil.log(e.getMessage() + ", shutting down server");
+                        out.println(e.getMessage() + ", shutting down server");
                         isStopped = true;
                         finished = true;
                         System.exit(0);
@@ -99,7 +100,7 @@ public class ThreadPool {
                     e.printStackTrace();
                 }
             }
-            log("WorkerThread-" + id + ": terminated at " + TimeUtil.getCurrentTime());
+            LogUtil.log("WorkerThread-" + id + ": terminated");
         }
     }
 
@@ -117,7 +118,7 @@ public class ThreadPool {
             workerThreads[i] = new WorkerThread(i);
             workerThreads[i].start();
         }
-        log("ThreadPool: started with " + numberThreadsRunning + " threads at " + TimeUtil.getCurrentTime());
+        LogUtil.log("ThreadPool: started with " + numberThreadsRunning + " threads");
     }
 
     /**
@@ -136,7 +137,7 @@ public class ThreadPool {
         // update current thread #
         prevNumberThreadsRunning = numberThreadsRunning;
         numberThreadsRunning *= 2;
-        log("ThreadPool: Threads doubled from " + prevNumberThreadsRunning + " to " + numberThreadsRunning + " threads at " + TimeUtil.getCurrentTime());
+        LogUtil.log("ThreadPool: Threads doubled from " + prevNumberThreadsRunning + " to " + numberThreadsRunning + " threads");
     }
 
     /**
@@ -154,7 +155,7 @@ public class ThreadPool {
         // update current thread #
         prevNumberThreadsRunning = numberThreadsRunning;
         numberThreadsRunning /= 2;
-        log("ThreadPool: Threads decreased from " + prevNumberThreadsRunning + " to " + numberThreadsRunning + " threads at " + TimeUtil.getCurrentTime());
+        LogUtil.log("ThreadPool: Threads decreased from " + prevNumberThreadsRunning + " to " + numberThreadsRunning + " threads");
     }
 
     /**
@@ -174,7 +175,7 @@ public class ThreadPool {
 
 		// clear # of threads
 		numberThreadsRunning = 0;
-        log("ThreadPool: All threads terminated at " + TimeUtil.getCurrentTime());
+        LogUtil.log("ThreadPool: All threads terminated");
     }
 
     /**
@@ -206,13 +207,5 @@ public class ThreadPool {
      */
     public int getMaxCapacity() {
         return maxCapacity;
-    }
-
-    /**
-     * Logs a simple message. In this case, we just write the
-     * message to the server applications standard output.
-     */
-    private void log(String message) {
-        System.out.println(message);
     }
 }

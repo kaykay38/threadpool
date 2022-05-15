@@ -28,7 +28,7 @@ public class Instruction {
                 num1 = Double.parseDouble(instructionArr[1]);
                 num2 = Double.parseDouble(instructionArr[2]);
             } catch(NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid instruction: not a number");
+                throw new IllegalArgumentException("Invalid instruction, not a number");
             }
             switch (operator) {
                 case "ADD":
@@ -39,7 +39,7 @@ public class Instruction {
                     return num1 * num2;
                 case "DIV":
                     if (num2 == 0) {
-                        throw new IllegalArgumentException("Invalid instruction: (cannot divide by zero)");
+                        throw new IllegalArgumentException("Invalid instruction, cannot divide by zero");
                     }
                     return num1 / num2;
                 default:

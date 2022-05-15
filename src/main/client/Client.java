@@ -1,4 +1,3 @@
-package main.client;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,8 +30,9 @@ public class Client extends Thread {
             connectToServer();
             String[] commands = {"ADD,4,5", "MUL,6,8", "ADD,455,4355", "MUL,6346,8", "DIV,34,0", "jfdls"};
             String currentCommand;
+            int n = commands.length;
             for (int i = 0; i < 100; i++) {
-                currentCommand = commands[i % 4];
+                currentCommand = commands[i % n];
                 sendInstructionReceiveResponse(id + "|cmd" + i + "| " + currentCommand);
             }
         } catch (IOException ex) {

@@ -12,8 +12,8 @@ import main.server.util.JobQueue;
  * @create 2022-05-08 15:54
  */
 public class ThreadManager extends Thread {
-    private JobQueue jobQueue;
     private ThreadPool pool;
+    private JobQueue jobQueue;
     private int threshold1; // first threshold
     private int threshold2; // second threshold
     private int pollInterval; // every pollInterval * 10 milliseconds, poll the status of thread pool
@@ -39,7 +39,6 @@ public class ThreadManager extends Thread {
         this.threshold2 = threshold2;
         this.pollInterval = pollInterval;
     }
-
 
     @Override
     public void run() {

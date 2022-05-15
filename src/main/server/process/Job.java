@@ -1,7 +1,7 @@
 package main.server.process;
 import java.net.Socket;
 
-import main.server.util.TimeUtil;
+import main.server.util.LogUtil;
 
 /**
  * @author Tianyang Liao, Mia Hunt, Samuel Urcino-Martinez
@@ -28,7 +28,7 @@ public class Job {
         this.instruction = instruction;
         this.instructionId = instructionId;
         this.clientId = clientId;
-        this.timeStamp = TimeUtil.getCurrentTime();
+        this.timeStamp = LogUtil.getCurrentTime();
     }
 
     /**

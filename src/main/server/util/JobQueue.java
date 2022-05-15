@@ -1,4 +1,5 @@
 package main.server.util;
+
 import java.net.Socket;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -7,6 +8,7 @@ import java.util.Spliterator;
 import java.util.function.Consumer;
 
 import main.server.process.Job;
+import main.server.util.LogUtil;
 
 
 /**
@@ -65,8 +67,8 @@ public class JobQueue implements Iterable<Job> {// job queue
         // put the job into queue
         q.addLast(job);
 
-        // System.out.println("JobQueue: enqueued " + instructionId + " '" + job.getInstruction() + "' " + "from " + clientId + " at " + job.getTimeStamp());
-        // System.out.println("JobQueue: size is " + q.size());
+        // LogUtil.log("JobQueue: enqueued " + instructionId + " '" + job.getInstruction() + "' " + "from " + clientId);
+        // LogUtil.log("JobQueue: size is " + q.size());
 
         notifyAll();
     }
@@ -77,7 +79,7 @@ public class JobQueue implements Iterable<Job> {// job queue
      * (NEED FURTHER IMPLEMENTATION TO MAKE IT THREAD SAFE)
      * @date 2022/5/8~18:52
      * @param
-     * @return server.process.MyJob
+     * @return server.process.Job
      */
     public synchronized Job dequeue() {
         while (q.isEmpty()) {
@@ -91,8 +93,8 @@ public class JobQueue implements Iterable<Job> {// job queue
         // remove a job from queue
         Job job = q.removeFirst();
 
-        // System.out.println("JobQueue: dequeued " + job.getInstructionId() + " '" + job.getInstruction() + "' " + "from " + job.getClientId() + " at " + job.getTimeStamp());
-        // System.out.println("JobQueue: size is " + q.size());
+        // LogUtil.log("JobQueue: dequeued " + job.getInstructionId() + " '" + job.getInstruction() + "' " + "from " + job.getClientId());
+        // LogUtil.log("JobQueue: size is " + q.size());
 
         notifyAll();
 
@@ -120,7 +122,7 @@ public class JobQueue implements Iterable<Job> {// job queue
     }
 
     /**
-     * @return java.util.Iterator<server.process.MyJob>
+     * @return java.util.Iterator<server.process.Job>
      */
     @Override
     public synchronized Iterator<Job> iterator() {
