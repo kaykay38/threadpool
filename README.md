@@ -27,7 +27,7 @@ javac src/**/*.java -d bin/
 - In a terminal
 ```
 cd bin
-java main.server.MathServer
+java MathServer
 ```
 
 ### Client
@@ -35,7 +35,7 @@ java main.server.MathServer
 #### GUI
 ```
 cd bin
-java main.client.MathClientGUI <cliendId>
+java MathClientGUI <cliendId>
 ```
 `clientId`: ie. "client1"
   

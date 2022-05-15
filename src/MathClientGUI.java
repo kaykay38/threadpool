@@ -16,8 +16,8 @@ import javax.swing.JTextField;
 public class MathClientGUI {
     public static void main(String[] args) throws Exception {
         if (args.length != 1) {
-             System.out.println("Usage: java main.client.MathClientGUI <client name/ID>");
-             System.out.println("Example: java main.client.MathClientGUI client1");
+             System.out.println("Usage: MathClientGUI <client name/ID>");
+             System.out.println("Example: MathClientGUI client1");
              System.exit(1);
         }
         GUIClient client = new GUIClient(args[0]);
