@@ -10,7 +10,7 @@ import java.util.TimerTask;
  */
 public class ThreadManager extends Thread {
     private JobQueue jobQueue;
-    private MyThreadPool pool;
+    private ThreadPool pool;
     private int threshold1; // first threshold
     private int threshold2; // second threshold
     private int pollInterval; // every pollInterval * 10 milliseconds, poll the status of thread pool
@@ -23,7 +23,7 @@ public class ThreadManager extends Thread {
      */
     public ThreadManager(JobQueue jobQueue) {
         this.jobQueue = jobQueue;
-        this.pool = new MyThreadPool(40, jobQueue);
+        this.pool = new ThreadPool(40, jobQueue);
         this.threshold1 = 10;
         this.threshold2 = 20;
         this.pollInterval = 2;
@@ -31,7 +31,7 @@ public class ThreadManager extends Thread {
 
     public ThreadManager(JobQueue jobQueue, int threshold1, int threshold2, int pollInterval) {
         this.jobQueue = jobQueue;
-        this.pool = new MyThreadPool(40, jobQueue);
+        this.pool = new ThreadPool(40, jobQueue);
         this.threshold1 = threshold1;
         this.threshold2 = threshold2;
         this.pollInterval = pollInterval;

@@ -19,6 +19,11 @@ import javax.swing.JTextField;
  */
 public class MathClientGUI {
     public static void main(String[] args) throws Exception {
+        if (args.length != 1) {
+             System.out.println("Usage: java main.client.MathClientGUI <client name/ID>");
+             System.out.println("Example: java main.client.MathClientGUI client1");
+             System.exit(1);
+        }
         GUIClient client = new GUIClient(args[0]);
         client.start();
         client.join();
@@ -29,20 +34,16 @@ public class MathClientGUI {
      * listener with the textfield so that pressing Enter in the
      * listener sends the textfield contents to the server.
      */
-    public static class GUIClient extends Thread {
+    public static class GUIClient extends Client {
         private JFrame frame = new JFrame("Math Client");
         private JTextField dataField = new JTextField(40);
         private JTextArea messageArea = new JTextArea(8, 60);
     
-        private final String id;
-        Socket socket;
-        private BufferedReader in;
-        private PrintWriter out;
         private int cmdCount = 0;
 
 
         public GUIClient(String id) {
-            this.id = id;
+            super(id);
             // Layout GUI
             messageArea.setEditable(false);
             frame.getContentPane().add(dataField, "North");
@@ -79,6 +80,7 @@ public class MathClientGUI {
             });
         }
 
+        @Override
         public void run() {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.pack();
@@ -88,28 +90,6 @@ public class MathClientGUI {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-        }
-
-        public void sendInstructionReceiveResponse(String instruction) {
-            System.out.println(instruction);
-            messageArea.append(instruction + "\n");
-            out.println(instruction);
-            String response = "";
-            try {
-                response = in.readLine();
-                if (response == null || response.equals("")) {
-                    messageArea.append("client to terminate.\n");
-                    System.out.println("client to terminate.");
-                }
-            } catch (IOException ex) {
-                response = "Error: " + ex;
-                messageArea.append(response + "\n");
-                System.out.println(response);
-            }
-            System.out.println(Thread.currentThread().getName());
-            messageArea.append(response + "\n");
-            System.out.println(response);
-            System.out.println();
         }
 
         public void connectToServer() throws IOException {

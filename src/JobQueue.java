@@ -12,10 +12,10 @@ import java.util.function.Consumer;
  * @Description The job queue for threads, Shared Object, Producer Consumer Model
  * @create 2022-05-08 15:55
  */
-public class JobQueue implements Iterable<MyJob> {// job queue
+public class JobQueue implements Iterable<Job> {// job queue
 
     private int capacity;
-    private Deque<MyJob> q; // job queue object
+    private Deque<Job> q; // job queue object
 
     /**
      * server.process.JobQueue.JobQueue():
@@ -57,7 +57,7 @@ public class JobQueue implements Iterable<MyJob> {// job queue
             }
         }
         // create a job
-        MyJob job = new MyJob(clientSocket, instruction, instructionId, clientId);
+        Job job = new Job(clientSocket, instruction, instructionId, clientId);
 
         // put the job into queue
         q.addLast(job);
@@ -74,9 +74,9 @@ public class JobQueue implements Iterable<MyJob> {// job queue
      * (NEED FURTHER IMPLEMENTATION TO MAKE IT THREAD SAFE)
      * @date 2022/5/8~18:52
      * @param
-     * @return server.process.MyJob
+     * @return server.process.Job
      */
-    public synchronized MyJob dequeue() {
+    public synchronized Job dequeue() {
         while (q.isEmpty()) {
             try {
                 wait();
@@ -86,7 +86,7 @@ public class JobQueue implements Iterable<MyJob> {// job queue
         }
 
         // remove a job from queue
-        MyJob job = q.removeFirst();
+        Job job = q.removeFirst();
 
         // System.out.println("JobQueue: dequeued " + job.getInstructionId() + " '" + job.getInstruction() + "' " + "from " + job.getClientId() + " at " + job.getTimeStamp());
         // System.out.println("JobQueue: size is " + q.size());
@@ -117,10 +117,10 @@ public class JobQueue implements Iterable<MyJob> {// job queue
     }
 
     /**
-     * @return java.util.Iterator<server.process.MyJob>
+     * @return java.util.Iterator<server.process.Job>
      */
     @Override
-    public synchronized Iterator<MyJob> iterator() {
+    public synchronized Iterator<Job> iterator() {
         return q.iterator();
     }
 
@@ -128,7 +128,7 @@ public class JobQueue implements Iterable<MyJob> {// job queue
      * @param action The action to be performed for each job in the queue
      */
     @Override
-    public synchronized void forEach(Consumer<? super MyJob> action) {
+    public synchronized void forEach(Consumer<? super Job> action) {
         q.forEach(action);
     }
 
@@ -136,7 +136,7 @@ public class JobQueue implements Iterable<MyJob> {// job queue
      * @return A Spliterator over the elements in the job queue
      */
     @Override
-    public synchronized Spliterator<MyJob> spliterator() {
+    public synchronized Spliterator<Job> spliterator() {
         return q.spliterator();
     }
 }

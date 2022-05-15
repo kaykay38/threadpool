@@ -6,7 +6,7 @@ import java.net.Socket;
  * @Description
  * @create 2022-05-08 18:33
  */
-public class MyJob {
+public class Job {
     private final Socket clientSocket;
     private final String clientId;
     private final String instructionId;
@@ -20,12 +20,12 @@ public class MyJob {
      * @param clientSocket from which client
      * @param instruction instructions to be performed
      */
-    public MyJob(Socket clientSocket, String instruction, String instructionId, String clientId) {
+    public Job(Socket clientSocket, String instruction, String instructionId, String clientId) {
         this.clientSocket = clientSocket;
         this.instruction = instruction;
         this.instructionId = instructionId;
         this.clientId = clientId;
-        this.timeStamp = Utils.getTimeStamp();
+        this.timeStamp = TimeUtil.getCurrentTime();
     }
 
     /**
