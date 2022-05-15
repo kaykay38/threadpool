@@ -90,7 +90,7 @@ public class ThreadPool {
                         out.println("Thread interrupted");
                     } catch (RuntimeException e) { // KILL
                         log("KILL instruction received at " + job.getTimeStamp());
-                        out.println(e.getMessage());
+                        out.println(e.getMessage() + "\n" + "Server is shutting down");
                         isStopped = true;
                         finished = true;
                         System.exit(0);
