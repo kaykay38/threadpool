@@ -33,8 +33,8 @@ public class MathClientCLITest {
         @Override
         public void run() {
             try {
-                super.connectToServer();
-                super.sendInstructionReceiveResponse(super.id + "|cmd| KILL");
+                connectToServer();
+                sendInstructionReceiveResponse(id + "|cmd| KILL");
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

@@ -62,8 +62,8 @@ public class JobQueue implements Iterable<Job> {// job queue
         // put the job into queue
         q.addLast(job);
 
-        // System.out.println("JobQueue: enqueued " + instructionId + " '" + job.getInstruction() + "' " + "from " + clientId + " at " + job.getTimeStamp());
-        // System.out.println("JobQueue: size is " + q.size());
+        // LogUtil.log("JobQueue: enqueued " + instructionId + " '" + job.getInstruction() + "' " + "from " + clientId);
+        // LogUtil.log("JobQueue: size is " + q.size());
 
         notifyAll();
     }
@@ -88,8 +88,8 @@ public class JobQueue implements Iterable<Job> {// job queue
         // remove a job from queue
         Job job = q.removeFirst();
 
-        // System.out.println("JobQueue: dequeued " + job.getInstructionId() + " '" + job.getInstruction() + "' " + "from " + job.getClientId() + " at " + job.getTimeStamp());
-        // System.out.println("JobQueue: size is " + q.size());
+        // LogUtil.log("JobQueue: dequeued " + job.getInstructionId() + " '" + job.getInstruction() + "' " + "from " + job.getClientId());
+        // LogUtil.log("JobQueue: size is " + q.size());
 
         notifyAll();
 
