@@ -37,7 +37,7 @@ java main.server.MathServer
 cd bin
 java main.client.MathClientGUI <cliendId>
 ```
-`clientId` ie. "client1"
+`clientId`: ie. "client1"
   
 #### CLI test
 ```
